@@ -1,0 +1,5 @@
+/* any custom CSS goes here */
+
+main {
+    min-height: 80vh; /* vh - viewport heights */
+}
