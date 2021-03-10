@@ -1,5 +1,14 @@
 /* any custom CSS goes here */
 
 main {
-    min-height: 80vh; /* vh - viewport heights */
+  min-height: 80vh; /* vh - viewport heights */
+}
+
+/* 1rem equals the font size of the html element - most browsers has a default value of 16px */
+h3 {
+  padding: 1rem 0;
+}
+
+.rating span {
+  margin: 0.1rem;
 }
