@@ -1,6 +1,11 @@
 // entry point for the server
-const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
-const products = require('./data/products'); // a JS array of Objects, not actual JSON
+import express from 'express'; // const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
+import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
+import products from './data/products.js'; // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
+// const products = require('./data/products'); - common JS syntax
+// products is a JS array of Objects, not actual JSON
+
+dotenv.config();
 
 const app = express(); // initialize express in variable called app
 
@@ -19,4 +24,9 @@ app.get('/api/products/:id', (req, res) => {
   res.json(product);
 });
 
-app.listen(5000, console.log('Server running on port 5000'));
+const PORT = process.env.PORT || 5000;
+
+app.listen(
+  PORT,
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+);

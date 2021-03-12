@@ -33,6 +33,8 @@ const Rating = ({ value, text, color }) => {
 // in case color prop is not passed in
 Rating.defaultProps = {
   color: '#f8e825',
+  value: 0,
+  text: 'Description loading...',
 };
 
 Rating.propTypes = {

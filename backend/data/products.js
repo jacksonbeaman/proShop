@@ -79,6 +79,6 @@ const products = [
   },
 ];
 
-module.exports = products; // common JS syntax
+export default products; // this syntax is ES modules - like "import ... from ..."" - works by default in React
 
-// "export default products" - this syntax is ES modules and works in React
+// module.exports = products; // common JS syntax - the default for node / express, unless the package.json is updated with "type": "module",
