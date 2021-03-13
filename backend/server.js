@@ -1,11 +1,14 @@
 // entry point for the server
 import express from 'express'; // const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
 import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
+import connectDB from './config/db.js';
 import products from './data/products.js'; // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
 // const products = require('./data/products'); - common JS syntax
 // products is a JS array of Objects, not actual JSON
 
 dotenv.config();
+
+connectDB();
 
 const app = express(); // initialize express in variable called app
 
