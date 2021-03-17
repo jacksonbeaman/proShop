@@ -1,6 +1,7 @@
 // entry point for the server
 import express from 'express'; // const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
 import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
+import colors from 'colors';
 import connectDB from './config/db.js';
 import products from './data/products.js'; // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
 // const products = require('./data/products'); - common JS syntax
@@ -31,5 +32,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(
   PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+  )
 );
