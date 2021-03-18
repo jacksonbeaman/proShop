@@ -3,9 +3,9 @@ import express from 'express'; // const express = require('express'); // common 
 import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
 import colors from 'colors';
 import connectDB from './config/db.js';
-import products from './data/products.js'; // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
-// const products = require('./data/products'); - common JS syntax
-// products is a JS array of Objects, not actual JSON
+// must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
+// const connectDB = require('./config/db'); - common JS syntax
+import productRoutes from './routes/productRoutes.js';
 
 dotenv.config();
 
@@ -18,15 +18,7 @@ app.get('/', (req, res) => {
   res.send('API is running...'); // ...we take res object and call send, sending a string to the client
 });
 
-app.get('/api/products', (req, res) => {
-  res.json(products); // res.send or res.json will convert products to the JSON content type
-});
-
-// route to get a single product by id
-app.get('/api/products/:id', (req, res) => {
-  const product = products.find((product) => product._id === req.params.id);
-  res.json(product);
-});
+app.use('/api/products', productRoutes);
 
 const PORT = process.env.PORT || 5000;
 

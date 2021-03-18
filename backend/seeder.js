@@ -24,11 +24,11 @@ const importData = async () => {
 
     const index = Math.floor(Math.random() * Math.floor(adminUsers.length)); // select random admin user
 
-    const adminUserID = adminUsers[index]._id;
+    const adminUserId = adminUsers[index]._id;
 
     // add user key and random admin user id value to product data
     const sampleProducts = products.map((product) => {
-      return { ...product, user: adminUserID };
+      return { ...product, user: adminUserId };
     });
 
     // add products data to product table / collection
