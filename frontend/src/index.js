@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'; // Provider must wrap our whole application
+import store from './store.js'; // Provider takes in store file
 import './bootstrap.min.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App /> {/*<React.StrictMode> is replaced with <Provider store={store}> */}
+  </Provider>,
   document.getElementById('root')
 );
 
