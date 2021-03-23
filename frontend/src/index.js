@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'; // Provider must wrap our whole application
-import store from './store.js'; // Provider takes in store file
+import store from './store'; // Provider takes in store file
 import './bootstrap.min.css';
 import './index.css';
 import App from './App';
