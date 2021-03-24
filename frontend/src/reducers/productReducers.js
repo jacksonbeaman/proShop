@@ -2,6 +2,9 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_FAIL,
+  PRODUCT_DETAILS_REQUEST,
+  PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DETAILS_FAIL,
 } from '../constants/productConstants';
 
 // productListReducer will handle the State for the product list, which we will see on the HomeScreen
@@ -10,7 +13,7 @@ import {
 // Action Reducer will dispatch action to the productListReducer
 export const productListReducer = (state = { products: [] }, action) => {
   // evaluate type that is in the action object
-  // hree different types that we look for: (1) fetch req (2) successful res (3) failure - send error through the State
+  // three different types that we look for: (1) fetch req (2) successful res (3) failure - send error through the State
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
       // return { loading: true } - we want the component to know that it's currently fetching
@@ -25,3 +28,19 @@ export const productListReducer = (state = { products: [] }, action) => {
   }
 };
 // in order to use Reducer, we have to add it to our store in store.js
+
+export const productDetailsReducer = (
+  state = { product: { reviews: [] } },
+  action
+) => {
+  switch (action.type) {
+    case PRODUCT_DETAILS_REQUEST:
+      return { loading: true, ...state };
+    case PRODUCT_DETAILS_SUCCESS:
+      return { loading: false, product: action.payload };
+    case PRODUCT_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
