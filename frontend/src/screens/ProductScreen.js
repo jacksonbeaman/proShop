@@ -16,8 +16,9 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(0); // qty is part of our component level state
+  const [qty, setQty] = useState(1); // qty is part of our component level state
 
+  // define dispatch so we can call an action
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
