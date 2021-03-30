@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
 // const connectDB = require('./config/db'); - common JS syntax
 import productRoutes from './routes/productRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -14,12 +15,15 @@ connectDB();
 
 const app = express(); // initialize express in variable called app
 
+app.use(express.json()); // allow us to accept JSON data in the body - aka body parser
+
 app.get('/', (req, res) => {
   // if we get a GET request to '/', we run a function that takes in a req and res object...
   res.send('API is running...'); // ...we take res object and call send, sending a string to the client
 });
 
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
