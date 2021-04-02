@@ -27,6 +27,44 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Register new user
+// @route   POST /api/users/
+// @access  Public - no token necessary - i.e. you don't need to be logged in
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body; // destructure data submitted in the body
+
+  // Check if user exists - find one document / row by email
+  const userExists = await User.findOne({ email: email });
+
+  if (userExists) {
+    res.status(400); // status code 400 means bad request
+    throw new Error('User already exists');
+  }
+
+  // User.create() is basically syntactic sugar for .save method in our userModel
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
+
+  // if the user is successfully created
+  if (user) {
+    // 201 means something was created
+    // we are sending the same json data as we would with a successful login, we are essentially authenticating as soon as we register
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400); // status code 400 means bad request
+    throw new Error('Invalid user data');
+  }
+});
+
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private - can only run this function / access this route, if next() in protect runs successfully
@@ -46,7 +84,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile };
+export { authUser, registerUser, getUserProfile };
 
 // req.body - access the data that is sent in the body - e.g. data submitted in forms
 // when we set a form in the frontend and we submit it, we are going to send a req, and we are going to send data in the body
