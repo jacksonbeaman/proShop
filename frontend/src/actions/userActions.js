@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {
+  USER_LOGOUT,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -34,4 +35,10 @@ export const login = (email, password) => async (dispatch) => {
           : error.message, // error.message is a generic
     });
   }
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem('userInfo');
+
+  dispatch({ type: USER_LOGOUT });
 };
