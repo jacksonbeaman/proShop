@@ -88,6 +88,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private - can only run this function / access this route, if next() in protect runs successfully
 const updateUserProfile = asyncHandler(async (req, res) => {
+  // we have access to user object in req.user - including user._id - in all of our protected routes
+  // our _id was returned in the payload from jwt.verify() - our decoded jwt payload returned the _id in payload post authentication - in protect from authMiddleware.js
   const user = await User.findById(req.user._id);
 
   if (user) {
