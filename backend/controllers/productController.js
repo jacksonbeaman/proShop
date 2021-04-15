@@ -1,5 +1,4 @@
-import asyncHandler from 'express-async-handler';
-// error handler so we don't need a trycatch in all of our database calls in all of our routes
+import asyncHandler from 'express-async-handler'; // error handler so we don't need a trycatch in all of our database calls in all of our routes
 import Product from '../models/productModel.js';
 
 // @desc    Fetch all products
