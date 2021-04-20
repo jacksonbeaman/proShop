@@ -10,7 +10,8 @@
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
-    "data:destroy": "node backend/seeder -d"
+    "data:destroy-all": "node backend/seeder -d -A",
+    "data:destroy-orders": "node backend/seeder -d -orders"
   },
   "author": "Jackson Beaman",
   "license": "MIT",

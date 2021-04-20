@@ -41,4 +41,25 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems };
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private / protected
+const getOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
+  // req.params.id - get ID from URL
+  // .populate - mongoose method - like JOIN in SQL
+  // .populate('user', 'name email'); - populate from the user table with name and email
+  // first argument is the table / collection we want to reference
+  // second argument is space-separated fields that we want returned / joined
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+});
+
+export { addOrderItems, getOrderById };

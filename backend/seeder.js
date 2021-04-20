@@ -22,7 +22,7 @@ const importData = async () => {
 
     const adminUsers = createdUsers.filter((user) => user.isAdmin === true); // find admin users among users
 
-    const index = Math.floor(Math.random() * Math.floor(adminUsers.length)); // select random admin user
+    // const index = Math.floor(Math.random() * Math.floor(adminUsers.length)); // select random admin user
 
     const adminUserId = adminUsers[index]._id;
 
@@ -56,8 +56,26 @@ const destroyData = async () => {
   }
 };
 
-if (process.argv[2] === '-d') {
+const destroyOrderData = async () => {
+  try {
+    await Order.deleteMany(); //deleteMany method returns a promise, so we must add await
+
+    console.log('Order Data Destroyed!'.red.inverse);
+    process.exit();
+  } catch (error) {
+    console.error(`${error}`.red.inverse);
+    process.exit(1);
+  }
+};
+
+if (process.argv[2] === '-d' && process.argv[3] === '-A') {
   destroyData();
+} else {
+  importData();
+}
+
+if (process.argv[2] === '-d' && process.argv[3] === '-orders') {
+  destroyOrderData();
 } else {
   importData();
 }
