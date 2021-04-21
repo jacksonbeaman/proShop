@@ -6,6 +6,9 @@ import {
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
+  ORDER_PAY_REQUEST,
+  ORDER_PAY_SUCCESS,
+  ORDER_PAY_FAIL,
 } from '../constants/orderConstants';
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -63,6 +66,46 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message, // error.message is a generic
+    });
+  }
+};
+
+export const payOrder = (orderId, paymentResult) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({ type: ORDER_PAY_REQUEST });
+
+    // destructure two levels
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    // when we are sending data, we want to send a Content-Type of application/json in the headers
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer: ${userInfo.token}`,
+      },
+    };
+
+    // second argument is paymentResult - data the backend needs to update
+    // backend doesn't need to receive any data to change isPaid to false or paidAt to Date.now()
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/pay`,
+      paymentResult,
+      config
+    );
+
+    dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_PAY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
