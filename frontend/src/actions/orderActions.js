@@ -57,8 +57,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    // second argument is user object - the data we want to update with
-    const { data } = await axios.get(`/api/orders${id}`, config);
+    const { data } = await axios.get(`/api/orders/${id}`, config);
 
     dispatch({ type: ORDER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
