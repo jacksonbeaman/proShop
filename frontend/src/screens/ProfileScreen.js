@@ -28,7 +28,11 @@ const ProfileScreen = ({ location, history }) => {
   const { success } = userUpdateProfile;
 
   const orderListMyOrders = useSelector((state) => state.orderListMyOrders);
-  const { loadingOrders, error: errorOrders, orders } = orderListMyOrders;
+  const {
+    loading: loadingOrders,
+    error: errorOrders,
+    orders,
+  } = orderListMyOrders;
 
   // redirect if we're not logged in
   useEffect(() => {
