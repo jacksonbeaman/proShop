@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios'; // so we can get our paypal client ID via a req to our 'api/config/paypal' route in our backend
 import { PayPalButton } from 'react-paypal-button-v2';
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
