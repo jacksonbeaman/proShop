@@ -114,7 +114,15 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, registerUser, getUserProfile, updateUserProfile };
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private / Admin
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.json(users);
+});
+
+export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers };
 
 // req.body - access the data that is sent in the body - e.g. data submitted in forms
 // when we set a form in the frontend and we submit it, we are going to send a req, and we are going to send data in the body
