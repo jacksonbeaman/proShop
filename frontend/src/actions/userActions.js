@@ -15,6 +15,9 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_DETAILS_RESET,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -102,7 +105,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     // when we are sending data, we want to send a Content-Type of application/json in the headers
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json', - not needed for this GET request because we are not sending data other than the Token
         Authorization: `Bearer: ${userInfo.token}`,
       },
     };
@@ -146,6 +149,36 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message, // error.message is a generic
+    });
+  }
+};
+
+export const listUsers = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_LIST_REQUEST });
+
+    // destructure two levels
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer: ${userInfo.token}`,
+      },
+    };
+
+    // second argument is user object - the data we want to update with
+    const { data } = await axios.get('/api/users', config);
+
+    dispatch({ type: USER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
