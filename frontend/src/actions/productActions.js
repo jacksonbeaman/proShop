@@ -8,6 +8,9 @@ import {
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAIL,
 } from '../constants/productConstants';
 
 // listProducts Action Creator is going to do pretty much what useEffect hook did in our HomeScreen Component
@@ -41,6 +44,35 @@ export const listProductDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message, // error.message is a generic
+    });
+  }
+};
+
+export const deleteProduct = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_DELETE_REQUEST });
+
+    // destructure two levels
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer: ${userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/products/${id}`, config);
+
+    dispatch({ type: PRODUCT_DELETE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
