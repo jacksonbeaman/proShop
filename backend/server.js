@@ -1,4 +1,5 @@
 // entry point for the server
+import path from 'path';
 import express from 'express'; // const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
 import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
 import colors from 'colors';
@@ -9,6 +10,7 @@ import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -26,11 +28,17 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // if we get a GET request to this route, we will respond with the paypal client ID from our environment
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
+
+// make uploads folder static so it can get loaded in the browser
+// uploads folder is not accessible by default
+const __dirname = path.resolve(); // allows __dirname to work with ES modules, as it normally does with common js - the require syntax
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.use(notFound);
 app.use(errorHandler);
