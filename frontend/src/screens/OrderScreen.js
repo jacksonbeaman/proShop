@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios'; // so we can get our paypal client ID via a req to our 'api/config/paypal' route in our backend
 import { PayPalButton } from 'react-paypal-button-v2';
-import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
-import { ORDER_PAY_RESET } from '../constants/orderConstants';
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from '../actions/orderActions';
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from '../constants/orderConstants';
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -21,6 +28,12 @@ const OrderScreen = ({ match }) => {
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay; // rename loading to loadingPay; rename success to successPay
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   // ensure 2 decimals in price formatting
   const addDecimals = (num) => {
@@ -35,6 +48,10 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push('/login');
+    }
+
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
       const script = document.createElement('script');
@@ -48,9 +65,10 @@ const OrderScreen = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== orderId || successPay) {
+    if (!order || order._id !== orderId || successPay || successDeliver) {
       // you can dispatch from the component screen, it doesn't have to come from an action file, although that is neater
       dispatch({ type: ORDER_PAY_RESET }); // otherwise it will just keep refreshing
+      dispatch({ type: ORDER_DELIVER_RESET }); // otherwise it will just keep refreshing
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       // check to see if PayPal script is not there
@@ -60,7 +78,11 @@ const OrderScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay]);
+  }, [dispatch, order, orderId, history, userInfo, successPay, successDeliver]);
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
+  };
 
   // paymentResult comes from PayPal
   const successPaymentHandler = (paymentResult) => {
@@ -193,6 +215,23 @@ const OrderScreen = ({ match }) => {
                   )}
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader />}
+              {/* check for - userInfo - before checking for -
+                userInfo.isAdmin - otherwise you may get an error */}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type='button'
+                      className='btn btn-block'
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
