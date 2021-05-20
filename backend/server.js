@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express'; // const express = require('express'); // common JS syntax using "require"; "import ... from ..."" is ES modules
 import dotenv from 'dotenv'; // const dotenv = require('dotenv'); - common JS syntax
 import colors from 'colors';
+import morgan from 'morgan';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 // must add file extension - e.g. .js - when using ES modules syntax for bringing in files, not packages
@@ -17,6 +18,10 @@ dotenv.config();
 connectDB();
 
 const app = express(); // initialize express in variable called app
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json()); // allow us to accept JSON data in the body - aka body parser
 
