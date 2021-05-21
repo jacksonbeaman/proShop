@@ -3,6 +3,7 @@ import {
   ORDER_LIST_ALL_ORDERS_RESET,
   ORDER_LIST_MY_ORDERS_RESET,
 } from '../constants/orderConstants';
+import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
 import {
   USER_LOGOUT,
   USER_LOGIN_FAIL,
@@ -69,6 +70,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: ORDER_LIST_MY_ORDERS_RESET });
   dispatch({ type: USER_LIST_RESET });
   dispatch({ type: ORDER_LIST_ALL_ORDERS_RESET });
+  dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
 };
 
 export const register = (name, email, password) => async (dispatch) => {

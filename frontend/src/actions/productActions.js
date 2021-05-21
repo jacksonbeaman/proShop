@@ -17,6 +17,9 @@ import {
   PRODUCT_UPDATE_REQUEST,
   PRODUCT_UPDATE_SUCCESS,
   PRODUCT_UPDATE_FAIL,
+  PRODUCT_CREATE_REVIEW_REQUEST,
+  PRODUCT_CREATE_REVIEW_SUCCESS,
+  PRODUCT_CREATE_REVIEW_FAIL,
 } from '../constants/productConstants';
 
 // listProducts Action Creator is going to do pretty much what useEffect hook did in our HomeScreen Component
@@ -151,6 +154,37 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   }
 };
 
+export const createProductReview =
+  (productId, review) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: PRODUCT_CREATE_REVIEW_REQUEST });
+
+      // destructure two levels
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer: ${userInfo.token}`,
+        },
+      };
+
+      // review object will have the rating and the comment
+      await axios.post(`/api/products/${productId}/reviews`, review, config);
+
+      dispatch({ type: PRODUCT_CREATE_REVIEW_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message, // error.message is a generic
+      });
+    }
+  };
 // useEffect gave us access to products in our return portion of the HomeScreen component
 // import { useState, useEffect } from 'react'; // bring in useState hook from react, so we can use state in functional components
 // // with class-based components state would be defined in the constructor
