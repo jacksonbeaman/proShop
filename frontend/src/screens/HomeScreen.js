@@ -12,7 +12,9 @@ import { listProducts } from '../actions/productActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
+  const keyword = match.params.keyword;
+
   // we don't need to use setProducts - i.e setState - or useState for our local State / Component level State when we are using Redux for global State
   // const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
@@ -23,8 +25,8 @@ const HomeScreen = () => {
 
   // useEffect hook takes in an arrow function that is going to run whenever the component loads
   useEffect(() => {
-    dispatch(listProducts()); // (1) useDipatch fires off the Action to get the list of products, sending it through the Reducer, down into the State
-  }, [dispatch]); // second argument to useEffect is an array of dependencies - if dependencies change, useEffect will be fired off again
+    dispatch(listProducts(keyword)); // (1) useDipatch fires off the Action to get the list of products, sending it through the Reducer, down into the State
+  }, [dispatch, keyword]); // second argument to useEffect is an array of dependencies - if dependencies change, useEffect will be fired off again
 
   return (
     <>

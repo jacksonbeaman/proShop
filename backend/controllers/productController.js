@@ -2,10 +2,16 @@ import asyncHandler from 'express-async-handler'; // error handler so we don't n
 import Product from '../models/productModel.js';
 
 // @desc    Fetch all products
-// @route   GET /api/products
+// @route   GET /api/products || GET /api/products?keyword=''
 // @access  Public - no token necessary - i.e. you don't need to be logged in
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}); // passing in an empty object to the find method from mongoose gives us everything
+  // $regex - include a regular expression in a MongoDB query
+  // $options: 'i' - case insensitive
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: 'i' } }
+    : {};
+
+  const products = await Product.find({ ...keyword }); // passing in an empty object to the find method from mongoose gives us everything
   res.json(products); // res.send or res.json will convert products to the JSON content type
 });
 

@@ -25,23 +25,26 @@ import {
 // listProducts Action Creator is going to do pretty much what useEffect hook did in our HomeScreen Component
 // thunk allows us to have a function within a function
 // passing in dispatch allows us to dipatch Actions to our Reducer
-export const listProducts = () => async (dispatch) => {
-  try {
-    dispatch({ type: PRODUCT_LIST_REQUEST });
+export const listProducts =
+  (keyword = '') =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get('/api/products');
+      // in the backend we will be able to parse the query string from the req object
+      const { data } = await axios.get(`/api/products?keyword=${keyword}`);
 
-    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: PRODUCT_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message, // error.message is a generic
-    });
-  }
-};
+      dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message, // error.message is a generic
+      });
+    }
+  };
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
