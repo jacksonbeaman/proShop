@@ -5,14 +5,22 @@ import Product from '../models/productModel.js';
 // @route   GET /api/products || GET /api/products?keyword=''
 // @access  Public - no token necessary - i.e. you don't need to be logged in
 const getProducts = asyncHandler(async (req, res) => {
+  const pageSize = 4;
+  const page = Number(req.query.pageNumber) || 1;
   // $regex - include a regular expression in a MongoDB query
   // $options: 'i' - case insensitive
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: 'i' } }
     : {};
 
-  const products = await Product.find({ ...keyword }); // passing in an empty object to the find method from mongoose gives us everything
-  res.json(products); // res.send or res.json will convert products to the JSON content type
+  const count = await Product.countDocuments({ ...keyword });
+  // passing in an empty object to the find method from mongoose gives us everything
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  // res.send or res.json will convert products to the JSON content type
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product by id

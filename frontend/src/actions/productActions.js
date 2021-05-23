@@ -26,13 +26,16 @@ import {
 // thunk allows us to have a function within a function
 // passing in dispatch allows us to dipatch Actions to our Reducer
 export const listProducts =
-  (keyword = '') =>
+  (keyword = '', pageNumber = '') =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
 
       // in the backend we will be able to parse the query string from the req object
-      const { data } = await axios.get(`/api/products?keyword=${keyword}`);
+      // two or more query strings use '&'
+      const { data } = await axios.get(
+        `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+      );
 
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {

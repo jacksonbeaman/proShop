@@ -35,7 +35,12 @@ export const productListReducer = (state = { products: [] }, action) => {
       // return { products: [] } - return products as empty array because the request hasn't been fulfilled yet
       return { loading: true, products: [] };
     case PRODUCT_LIST_SUCCESS:
-      return { loading: false, products: action.payload }; // we are going to fill products in the State with the data from action payload
+      return {
+        loading: false,
+        products: action.payload.products,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      }; // we are going to fill products in the State with the data from action payload
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload }; // we will set error in the State and will send the error from the payload
     default:
