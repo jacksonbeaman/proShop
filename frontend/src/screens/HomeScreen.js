@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // useDispatch will dispatch or call an action
 // useSelector will select parts of the State - e.g. the product list part of the State - kind of like setState in Component level State
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Product from '../components/Product';
 import { listProducts } from '../actions/productActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword;
@@ -32,6 +34,7 @@ const HomeScreen = ({ match }) => {
 
   return (
     <>
+      {!keyword ? <ProductCarousel /> : <Link to='/'>Go Back</Link>}
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />

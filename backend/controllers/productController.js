@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler'; // error handler so we don't n
 import Product from '../models/productModel.js';
 
 // @desc    Fetch all products
-// @route   GET /api/products || GET /api/products?keyword=''
+// @route   GET /api/products || GET /api/products?keyword='' || GET /api/products?keyword='&pageNumber=''
 // @access  Public - no token necessary - i.e. you don't need to be logged in
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 4;
@@ -139,6 +139,15 @@ const createProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get top rated products
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  res.json(products);
+});
+
 export {
   getProducts,
   getProductById,
@@ -146,4 +155,5 @@ export {
   createProduct,
   updateProduct,
   createProductReview,
+  getTopProducts,
 };
