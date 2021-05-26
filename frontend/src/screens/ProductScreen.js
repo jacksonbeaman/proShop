@@ -11,6 +11,7 @@ import {
   Form,
 } from 'react-bootstrap';
 import Rating from '../components/Rating';
+import Meta from '../components/Meta';
 import {
   listProductDetails,
   createProductReview,
@@ -71,6 +72,7 @@ const ProductScreen = ({ history, match }) => {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} desription={product.desription}></Meta>
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid></Image>
