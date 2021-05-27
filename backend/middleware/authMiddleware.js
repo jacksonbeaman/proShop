@@ -5,28 +5,32 @@ import asyncHandler from 'express-async-handler';
 
 // middleware functions require (req, res, next) as arguments
 const protect = asyncHandler(async (req, res, next) => {
-  let token = req.headers.authorization;
+  let token;
 
-  if (token && token.startsWith('Bearer')) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
     try {
-      const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
-      console.log(decoded);
+      token = req.headers.authorization.split(' ')[1];
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
       // .select('-password') so the password is not returned from the database
       // we will now have access to req.user in all of our protected routes
       req.user = await User.findById(decoded.id).select('-password');
+
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
       throw new Error('Not authorized, token failed');
     }
-    console.log(`Token found: ${token}`);
-  } else if (!token) {
+  }
+
+  if (!token) {
     res.status(401);
     throw new Error('Not authorized, no token');
-  } else {
-    res.status(401);
-    throw new Error('Not authorized, improperly formatted token');
   }
 });
 
