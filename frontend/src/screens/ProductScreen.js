@@ -43,13 +43,25 @@ const ProductScreen = ({ history, match }) => {
 
   useEffect(() => {
     if (successProductReview) {
-      alert('Review Submitted');
+      // make sure user can see their own review
+      dispatch(listProductDetails(match.params.id));
+      // reset component-level state upon receiving success from global state / reducer - which has come back from the server
       setRating(0);
       setComment('');
+    }
+    if (errorProductReview) {
+      // reset component-level state upon receiving error from global state / reducer - which has come back from the server
+      setRating(0);
+      setComment('');
+    }
+    if (!product._id || product._id !== match.params.id) {
+      // list product details will be dispatched upon page load because logical not of product - from empty productDetails state - will be evaluated as true
+      dispatch(listProductDetails(match.params.id));
+      // don't dipatch product review reset unless viewing another product
+      // we want user to be able to view success and error messages coming from productReviewCreate state
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
-    dispatch(listProductDetails(match.params.id));
-  }, [dispatch, match, successProductReview]);
+  }, [dispatch, match, successProductReview, errorProductReview, product._id]);
 
   const addToCartHandler = () => {
     history.push(`/cart/${match.params.id}?qty=${qty}`); // props.history.push() will redirect;
@@ -66,7 +78,9 @@ const ProductScreen = ({ history, match }) => {
       <Link className='btn btn-light my-3' to='/'>
         Go Back
       </Link>
-      {loading ? (
+      {/*show loader for the product details when loading productDetails except when review is successfully submitted */}
+      {/* a loader for the reviews will shown below */}
+      {loading && !successProductReview ? (
         <Loader />
       ) : error ? (
         <Message variant='danger'>{error}</Message>
@@ -168,10 +182,13 @@ const ProductScreen = ({ history, match }) => {
                 ))}
                 <ListGroup.Item>
                   <h2>Write a Customer Review</h2>
+                  {successProductReview && (
+                    <Message variant='success'>Review submitted!</Message>
+                  )}
+                  {loadingProductReview && <Loader />}
                   {errorProductReview && (
                     <Message variant='danger'>{errorProductReview}</Message>
                   )}
-                  {loadingProductReview && <Loader />}
                   {userInfo ? (
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId='rating'>
