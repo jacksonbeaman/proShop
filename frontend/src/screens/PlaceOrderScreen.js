@@ -13,6 +13,14 @@ const PlaceOrderScreen = ({ history }) => {
 
   const cart = useSelector((state) => state.cart);
 
+  // redirect if there's no shipping address
+  if (!cart.shippingAddress.address) {
+    history.push('/shipping');
+    // redirect if there's no payment method
+  } else if (!cart.paymentMethod) {
+    history.push('/payment');
+  }
+
   // ensure 2 decimals in price formatting
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
