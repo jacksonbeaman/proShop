@@ -25,11 +25,6 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json()); // allow us to accept JSON data in the body - aka body parser
 
-app.get('/', (req, res) => {
-  // if we get a GET request to '/', we run a function that takes in a req and res object...
-  res.send('API is running...'); // ...we take res object and call send, sending a string to the client
-});
-
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
@@ -44,6 +39,21 @@ app.get('/api/config/paypal', (req, res) =>
 // uploads folder is not accessible by default
 const __dirname = path.resolve(); // allows __dirname to work with ES modules, as it normally does with common js - the require syntax
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+if (process.env.NODE_ENV === 'production') {
+  // set frontend/build to a static folder if we're in production mode
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+  // any route that's not our api
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    // if we get a GET request to '/', we run a function that takes in a req and res object...
+    res.send('API is running...'); // ...we take res object and call send, sending a string to the client
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

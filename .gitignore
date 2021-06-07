@@ -10,7 +10,7 @@ node_modules/
 /coverage
 
 # production
-/build
+/frontend/build
 
 # misc  - we don't want to push .env because that will contain all of our environmental variables - can contain sensative info - api keys, uri's
 .DS_Store

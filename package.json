@@ -11,7 +11,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
     "data:destroy-all": "node backend/seeder -d -A",
-    "data:destroy-orders": "node backend/seeder -d -orders"
+    "data:destroy-orders": "node backend/seeder -d -orders",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Jackson Beaman",
   "license": "MIT",
